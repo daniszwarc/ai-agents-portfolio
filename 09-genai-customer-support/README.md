@@ -1,216 +1,161 @@
-# GenAI Customer Support Assistant
+# 09 - GenAI Customer Support Assistant
 
-A Retrieval-Augmented Generation (RAG) system that provides intelligent customer support by searching through internal documentation and knowledge bases to answer customer questions with accurate, contextual responses.
+An intelligent customer support system powered by generative AI with RAG (Retrieval-Augmented Generation) capabilities for accessing internal knowledge bases.
 
-![Python](https://img.shields.io/badge/python-v3.11+-blue.svg)
-![OpenAI](https://img.shields.io/badge/OpenAI-GPT--3.5--turbo-green.svg)
-![LangChain](https://img.shields.io/badge/LangChain-🦜🔗-orange.svg)
-![Streamlit](https://img.shields.io/badge/Streamlit-Web%20Apps-ffffff?logo=streamlit&style=flat&color=27e0c9&logoColor=FF4B4B)
+## 🎯 Overview
 
-## Project Overview
+This agent automates and enhances customer support services by:
+- Understanding customer queries in natural language
+- Retrieving relevant information from internal documentation
+- Generating contextual, helpful responses
+- Learning from interactions to improve over time
 
-This customer support assistant demonstrates:
-- **Retrieval-Augmented Generation (RAG)** implementation
-- **Document processing** and vector storage
-- **Semantic search** capabilities
-- **Source attribution** for transparency
-- **Interactive web interface** for easy testing
+## ✨ Features
 
-## Key Features
+- **Natural Language Understanding**: Processes customer queries in multiple languages
+- **RAG Implementation**: Fetches relevant information from internal knowledge base
+- **Real-time Responses**: Provides instant, contextual answers
+- **Conversation Memory**: Maintains context across conversation threads
 
-- 📄 **Multi-format document processing** (PDF, TXT)
-- 🔍 **Intelligent semantic search** using vector embeddings
-- 🤖 **Context-aware response generation** with GPT-3.5-turbo
-- 📚 **Source attribution** showing which documents informed each answer
-- 💬 **Interactive chat interface** with conversation history
-- ⚡ **Real-time document upload** and processing
-- 🎛️ **Configurable search parameters** and response settings
+## 🛠️ Technology Stack
 
-## Quick Start
+**Code Implementation:**
+- OpenAI API / Anthropic Claude
+- LangChain for orchestration
+- LlamaIndex for document indexing
+- Pinecone/Chroma for vector storage
 
-### Prerequisites
+**No-Code Implementation:**
+- n8n workflow automation
+- OpenAI integration nodes
+- Database connectors
+- Webhook triggers
 
-- Python 3.11+
-- OpenAI API key ([Get one here](https://platform.openai.com/api-keys))
+## 🚀 Quick Start
 
-### Installation
+### Code Implementation
 
-1. **Clone the repository**
+1. **Setup Environment**
    ```bash
-   git clone https://github.com/yourusername/ai-agents-portfolio.git
-   cd ai-agents-portfolio/09-genai-customer-support
-   ```
-
-2. **Create and activate virtual environment**
-   ```bash
-   conda create -n ai-agents python=3.11
-   conda activate ai-agents
-   ```
-
-3. **Install dependencies**
-   ```bash
+   cd code-implementation
+   python -m venv venv
+   source venv/bin/activate  # Windows: venv\Scripts\activate
    pip install -r requirements.txt
    ```
 
-4. **Set up environment variables**
+2. **Configure Environment Variables**
    ```bash
    cp .env.example .env
-   # Edit .env and add your OpenAI API key
+   # Edit .env with your API keys
    ```
 
-5. **Run the application**
+3. **Run the Application**
    ```bash
-   streamlit run main.py
+   python main.py
    ```
 
-6. **Open your browser** to `http://localhost:8501`
+### No-Code Implementation
 
-## How to Use
+1. **Import Workflow**
+   - Open n8n
+   - Import `nocode-implementation/workflow.json`
+   - Configure your API credentials
 
-### Getting Started
-1. **Load Sample Knowledge Base**: Click the button in the sidebar to load pre-configured FAQ data
-2. **Or Upload Your Own Documents**: Use the file uploader to add PDF or TXT files
-3. **Ask Questions**: Type questions in the chat interface
-4. **Review Sources**: Expand source sections to see which documents were referenced
+2. **Setup Knowledge Base**
+   - Upload your documents to the designated folder
+   - Configure vector database connection
 
-### Example Questions to Try
-- "How do I reset my password?"
-- "What payment methods do you accept?"
-- "How do I contact technical support?"
-- "What features are included in the platform?"
+3. **Activate Workflow**
+   - Test with sample queries
+   - Deploy webhook endpoints
 
-## Architecture
+## 📈 Usage Examples
 
-```
-┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
-│   Documents     │───▶│  Text Splitter  │───▶│   Embeddings    │
-│  (PDF, TXT)     │    │   (Chunking)    │    │   (OpenAI)      │
-└─────────────────┘    └─────────────────┘    └─────────────────┘
-                                                         │
-┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
-│ User Question   │───▶│  Vector Search  │◀───│  Vector Store   │
-│                 │    │   (Similarity)  │    │   (ChromaDB)    │
-└─────────────────┘    └─────────────────┘    └─────────────────┘
-         │                        │
-         │                        ▼
-         │              ┌─────────────────┐
-         └─────────────▶│   LLM (GPT)     │
-                        │   Generation    │
-                        └─────────────────┘
-                                 │
-                                 ▼
-                        ┌─────────────────┐
-                        │   Response +    │
-                        │   Sources       │
-                        └─────────────────┘
-```
-
-## Technical Implementation
-
-### Core Components
-
-**Document Processing Pipeline**
-- Text extraction from PDFs and text files
-- Intelligent text chunking with overlap
-- Metadata preservation for source attribution
-
-**Vector Storage System**
-- OpenAI embeddings for semantic representation
-- ChromaDB for efficient similarity search
-- Persistent storage for document retention
-
-**RAG Chain**
-- LangChain orchestration for retrieval and generation
-- Context-aware prompt engineering
-- Source document tracking
-
-### Key Technologies
-
-- **[LangChain](https://langchain.com/)**: Orchestration framework for LLM applications
-- **[OpenAI API](https://openai.com/api/)**: GPT-3.5-turbo for response generation
-- **[ChromaDB](https://www.trychroma.com/)**: Vector database for document storage
-- **[Streamlit](https://streamlit.io/)**: Web interface framework
-
-## Performance Metrics
-
-- **Response Time**: < 2 seconds for most queries
-- **Document Capacity**: Tested with 100+ documents
-- **Search Accuracy**: Semantic similarity matching
-- **Source Attribution**: 100% response traceability
-
-## Configuration Options
-
-### Environment Variables
-
-```bash
-# Required
-OPENAI_API_KEY=your_api_key_here
-
-# Optional Customization
-OPENAI_MODEL=gpt-3.5-turbo          # or gpt-4
-OPENAI_TEMPERATURE=0.1              # Response creativity (0-1)
-CHROMA_PERSIST_DIRECTORY=./chroma_db # Vector storage location
-```
-
-### RAG Parameters
-
+### Basic Query Handling
 ```python
-# Text Splitting
-chunk_size=1000          # Characters per chunk
-chunk_overlap=200        # Overlap between chunks
+# Example customer query
+query = "How do I reset my password?"
 
-# Retrieval
-search_type="similarity" # Search algorithm
-k=3                     # Number of sources to retrieve
+# Agent processes and responds
+response = customer_support_agent.process_query(query)
+print(response.answer)
+# Output: "To reset your password, please follow these steps..."
 ```
 
-## Testing
+### Integration with Existing Systems
+```python
+# Webhook integration
+@app.post("/customer-support")
+async def handle_support_request(request: SupportRequest):
+    response = await agent.process_query(request.message)
+    return {"response": response.answer, "confidence": response.confidence}
+```
 
-### Manual Testing
-1. Load sample knowledge base
-2. Test with provided example questions
-3. Upload your own documents
-4. Verify source attribution accuracy
+## 🔍 Technical Deep Dive
 
-### Automated Testing
+### RAG Architecture
+1. **Document Ingestion**: Process and chunk knowledge base documents
+2. **Vector Embedding**: Convert text to embeddings using OpenAI
+3. **Similarity Search**: Find relevant document chunks for queries
+4. **Context Augmentation**: Combine retrieved context with user query
+5. **Response Generation**: Generate contextual response using LLM
+
+### Conversation Flow
+```mermaid
+graph TD
+    A[Customer Query] --> B[Intent Classification]
+    B --> C[Context Retrieval]
+    C --> D[Response Generation]
+    D --> E{Confidence Check}
+    E -->|High| F[Return Response]
+    E -->|Low| G[Escalate to Human]
+```
+
+## 🧪 Testing
+
 ```bash
-# Run tests (when implemented)
+# Run unit tests
 pytest tests/
+
+# Run integration tests
+pytest tests/integration/
+
+# Test with sample queries
+python test_queries.py
 ```
 
-## Deployment Options
+## 📦 Deployment
 
-### Streamlit Cloud (Recommended for demos)
-1. Push code to GitHub
-2. Connect repository to [Streamlit Cloud](https://streamlit.io/cloud)
-3. Add environment variables in dashboard
-4. Deploy with one click
-
-### Local Docker
+### Docker Deployment
 ```bash
-# Build image
-docker build -t customer-support-ai .
-
-# Run container
-docker run -p 8501:8501 customer-support-ai
+docker build -t genai-customer-support .
+docker run -p 8000:8000 genai-customer-support
 ```
 
-## Contributing
+### Cloud Deployment
+- **AWS**: Lambda + API Gateway
+- **Google Cloud**: Cloud Run
+- **Azure**: Container Instances
 
-1. Fork the repository
-2. Create a feature branch: `git checkout -b feature-name`
-3. Make your changes and commit: `git commit -m 'Add feature'`
-4. Push to branch: `git push origin feature-name`
-5. Submit a pull request
+## 🐛 Troubleshooting
 
-## License
+### Common Issues
+1. **Slow Response Times**: Check vector database performance
+2. **Low Accuracy**: Review knowledge base quality
+3. **API Errors**: Verify API key configurations
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+### Debug Mode
+```bash
+python main.py --debug
+```
 
-## Acknowledgments
 
-- [LangChain](https://langchain.com/) for the excellent RAG framework
-- [OpenAI](https://openai.com/) for powerful language models
-- [Streamlit](https://streamlit.io/) for rapid prototyping capabilities
+## 📚 Resources
+
+- [LangChain Documentation](https://python.langchain.com/)
+- [OpenAI API Reference](https://platform.openai.com/docs)
+- [n8n Documentation](https://docs.n8n.io/)
 
 ---
+
+**Status**: ✅ Complete | **Last Updated**: June 2025
