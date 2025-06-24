@@ -139,22 +139,24 @@ class SoccerClubSupportRAG:
                     # st.write(f"- Metadata keys: {list(metadata.keys())}")
                     # st.write(f"- Content exists: {bool(text_content)}")
                     # st.write(f"- Content length: {len(text_content) if text_content else 0}")
-                    if text_content:
-                        st.write(f"- Content preview: {str(text_content)[:150]}...")
-
-                    st.write(f"**Raw text (first 500 chars):** {repr(text_content[:500])}")    
-                    # Specifically check for pricing
-                    '''
-                    if "280" in text_content:
-                        st.success(f"✅ Found '280' in raw text")
-                    elif "28" in text_content:
-                        st.warning(f"⚠️ Found '28' but not '280' in raw text")
                     
-                    if "350" in text_content:
-                        st.success(f"✅ Found '350' in raw text")
-                    elif "35" in text_content:
-                        st.warning(f"⚠️ Found '35' but not '350' in raw text")
-                    '''
+                    
+                    # if text_content:
+                    #     st.write(f"- Content preview: {str(text_content)[:150]}...")
+
+                    # st.write(f"**Raw text (first 500 chars):** {repr(text_content[:500])}")    
+                    # Specifically check for pricing
+                    
+                    # if "280" in text_content:
+                    #     st.success(f"✅ Found '280' in raw text")
+                    # elif "28" in text_content:
+                    #     st.warning(f"⚠️ Found '28' but not '280' in raw text")
+                    
+                    # if "350" in text_content:
+                    #     st.success(f"✅ Found '350' in raw text")
+                    # elif "35" in text_content:
+                    #     st.warning(f"⚠️ Found '35' but not '350' in raw text")
+                    
 
 
                     if text_content and len(text_content.strip()) > 20:
@@ -185,20 +187,20 @@ class SoccerClubSupportRAG:
 
                         # DEBUG: Show what content we're actually storing
                         # ADD DEBUG HERE - RIGHT BEFORE CREATING DOCUMENT:
-                        '''
-                        if processed_count < 5:
-                            st.write(f"**FIXED CONTENT {processed_count + 1}:**")
-                            st.write(f"Before: `CAD 550Price` -> After: `{cleaned_text[cleaned_text.find('CAD 5'):cleaned_text.find('CAD 5')+20]}`")
+                        
+                        # if processed_count < 5:
+                            # st.write(f"**FIXED CONTENT {processed_count + 1}:**")
+                            # st.write(f"Before: `CAD 550Price` -> After: `{cleaned_text[cleaned_text.find('CAD 5'):cleaned_text.find('CAD 5')+20]}`")
                             
-                            # Check specific price strings
-                            if "CAD 280" in cleaned_text:
-                                st.success("✅ CAD 280 in final content")
-                            elif "CAD 28" in cleaned_text:
-                                st.error("❌ Only CAD 28 in final content")
+                            # # Check specific price strings
+                            # if "CAD 280" in cleaned_text:
+                            #     st.success("✅ CAD 280 in final content")
+                            # elif "CAD 28" in cleaned_text:
+                            #     st.error("❌ Only CAD 28 in final content")
                                 
                             # Check length
-                            st.write(f"**Text length:** {len(cleaned_text)} characters")
-                        '''
+                            # st.write(f"**Text length:** {len(cleaned_text)} characters")
+                        
 
                         doc = Document(
                             page_content=cleaned_text,
@@ -324,7 +326,8 @@ class SoccerClubSupportRAG:
                 Provide a comprehensive answer based on the club's information:
                 """
             
-            result = self.qa_chain({"query": soccer_prompt})
+            #result = self.qa_chain({"query": soccer_prompt})
+            result = self.qa_chain.invoke({"query": soccer_prompt})
 
             '''
             # CAPTURE DEBUG INFO
@@ -412,15 +415,15 @@ def main():
                 if result["success"]:
                     st.success(result["message"])                    
 
-                    '''
-                    if st.button("🔍 Test Stored Content"):
-                        if st.session_state.rag_system.vector_store:
-                            test_docs = st.session_state.rag_system.vector_store.similarity_search("280", k=3)
-                            # st.write(f"**Search for '280' returned {len(test_docs)} documents:**")
-                            for i, doc in enumerate(test_docs):
-                                st.write(f"Doc {i+1}: {doc.page_content[:200]}...")
                     
-                    '''
+                    # if st.button("🔍 Test Stored Content"):
+                    #     if st.session_state.rag_system.vector_store:
+                    #         test_docs = st.session_state.rag_system.vector_store.similarity_search("280", k=3)
+                            # st.write(f"**Search for '280' returned {len(test_docs)} documents:**")
+                    #         for i, doc in enumerate(test_docs):
+                    #             st.write(f"Doc {i+1}: {doc.page_content[:200]}...")
+                    
+                    
                     # FORCE QA CHAIN CREATION:
                     try:
                         st.session_state.rag_system._create_qa_chain()
@@ -453,7 +456,7 @@ def main():
                     try:
                         st.session_state.rag_system._create_qa_chain()
                         # st.write(f"- Manual QA chain creation: SUCCESS")
-                        s# t.write(f"- QA chain after manual creation: {st.session_state.rag_system.qa_chain is not None}")
+                        # t.write(f"- QA chain after manual creation: {st.session_state.rag_system.qa_chain is not None}")
                     except Exception as e:
                         st.error(f"- Manual QA chain creation failed: {e}")
                         
@@ -477,18 +480,18 @@ def main():
         
         st.markdown("---")
         
-        st.subheader("💡 What You Can Ask About")
-        st.markdown("""
-        - 🏟️ **Fields & Facilities:** Field conditions, locations, amenities
-        - 👥 **Players & Teams:** Rosters, stats, team information  
-        - 📅 **Schedules:** Game times, practice schedules, tournaments
-        - 🎫 **Registration:** How to join, fees, requirements
-        - 🏆 **Leagues & Competitions:** Standings, tournaments, results
-        - 👨‍🏫 **Coaching:** Training programs, coaching staff
-        - 🛍️ **Equipment:** Gear requirements, where to buy
-        - 🚌 **Transportation:** Directions, parking, carpools
-        - 📋 **Policies:** Rules, safety guidelines, weather policies
-        """)
+        # st.subheader("💡 What You Can Ask About")
+        # st.markdown("""
+        # - 🏟️ **Fields & Facilities:** Field conditions, locations, amenities
+        # - 👥 **Players & Teams:** Rosters, stats, team information  
+        # - 📅 **Schedules:** Game times, practice schedules, tournaments
+        # - 🎫 **Registration:** How to join, fees, requirements
+        # - 🏆 **Leagues & Competitions:** Standings, tournaments, results
+        # - 👨‍🏫 **Coaching:** Training programs, coaching staff
+        # - 🛍️ **Equipment:** Gear requirements, where to buy
+        # - 🚌 **Transportation:** Directions, parking, carpools
+        # - 📋 **Policies:** Rules, safety guidelines, weather policies
+        # """)
         
         st.markdown("---")
         
@@ -509,30 +512,32 @@ def main():
     st.header("💬 Ask About Our Soccer Club")
     
     # Example questions for community soccer
-    with st.expander("💡 Example Questions"):
-        col1, col2, col3 = st.columns(3)
-        with col1:
-            if st.button("🏟️ Field locations?"):
-                st.session_state.question_input = "Where are the soccer fields located?"
-            if st.button("👥 How to register?"):
-                st.session_state.question_input = "How do I register my child for soccer?"
-        with col2:
-            if st.button("📅 Practice schedule?"):
-                st.session_state.question_input = "What is the practice schedule?"
-            if st.button("💰 What are the fees?"):
-                st.session_state.question_input = "How much does it cost to join?"
-        with col3:
-            if st.button("🛍️ Equipment needed?"):
-                st.session_state.question_input = "What equipment does my child need?"
-            if st.button("☔ Weather policies?"):
-                st.session_state.question_input = "What happens if it rains?"
+    # with st.expander("💡 Example Questions"):
+    #     col1, col2, col3 = st.columns(3)
+    #     with col1:
+    #         if st.button("🏟️ Field locations?"):
+    #             st.session_state.question_input = "Where are the soccer fields located?"
+    #         if st.button("👥 How to register?"):
+    #             st.session_state.question_input = "How do I register my child for soccer?"
+    #     with col2:
+    #         if st.button("📅 Practice schedule?"):
+    #             st.session_state.question_input = "What is the practice schedule?"
+    #         if st.button("💰 What are the fees?"):
+    #             st.session_state.question_input = "How much does it cost to join?"
+    #     with col3:
+    #         if st.button("🛍️ Equipment needed?"):
+    #             st.session_state.question_input = "What equipment does my child need?"
+    #         if st.button("☔ Weather policies?"):
+    #             st.session_state.question_input = "What happens if it rains?"
     
+
     # Display chat history
     for i, (question, response) in enumerate(st.session_state.chat_history):
         with st.container():
             st.markdown(f"**🙋 You:** {question}")
             st.markdown(f"**⚽ Club Assistant:** {response['answer']}")
             
+            """
             if response['sources']:
                 with st.expander(f"📖 Sources from club database ({len(response['sources'])})"):
                     for j, source in enumerate(response['sources']):
@@ -541,7 +546,7 @@ def main():
                         if source['metadata']:
                             st.markdown(f"- **Details:** {source['metadata']}")
             st.markdown("---")
-    
+            """
     # Question input
     question = st.text_input(
         "Ask your question:",
