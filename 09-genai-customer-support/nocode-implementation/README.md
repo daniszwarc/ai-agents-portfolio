@@ -15,10 +15,8 @@ The n8n workflow automates the entire customer support process:
 
 ## 📁 Files
 
-- `workflow.json` - Main n8n workflow export
+- `Customer_Service_Agent.json` - Main n8n workflow export
 - `README.md` - This setup guide
-- `webhook-config.json` - Webhook configuration examples
-- `test-queries.json` - Sample queries for testing
 
 ## 🚀 Quick Setup
 
