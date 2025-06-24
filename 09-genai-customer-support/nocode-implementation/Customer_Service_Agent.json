@@ -1,0 +1,269 @@
+{
+  "name": "Customer Service Agent",
+  "nodes": [
+    {
+      "parameters": {
+        "public": true,
+        "initialMessages": "=Bienvenue! / Welcome!\nJe suis ici pour répondre à toutes vos questions. Comment puis-je vous aider aujourd'hui?\nI'm here to answer all your questions. How may I help you today?",
+        "options": {}
+      },
+      "id": "7b7a8a22-e3de-4660-9e27-2e40c1009dd1",
+      "name": "Chat Trigger",
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1,
+      "position": [
+        260,
+        -60
+      ],
+      "webhookId": "4b338d3c-b03f-42f2-94c1-9353d0f1fbc2"
+    },
+    {
+      "parameters": {
+        "options": {
+          "systemMessage": "=You are a knowledgeable assistant for our club, specializing in providing information about age-appropriate activities and programs.\n\nYOUR PRIMARY TASK:\nWhen asked about activities for any age group, you MUST:\n1. ALWAYS use the search_knowledge_base tool to search for activities related to that specific age group\n2. Provide ALL activities found for that age group\n3. Include complete pricing information for each activity\n4. Present the information in an organized, easy-to-read format\n5. Never include information for previous years\n6. ALWAYS use the information for the current year\n\nSEARCH STRATEGY:\n- Search using terms like: \"[age] activities\", \"[age group] programs\", \"children [age]\", \"youth programs\", \"adult activities\", etc.\n- Try multiple search queries if needed to ensure you find all relevant activities\n- Look for age ranges that might include the requested age\n\nRESPONSE GUIDELINES:\n- If activities are found: List ALL activities with their complete details including:\n  • Activity name\n  • Age range/requirements\n  • Schedule/timing\n  • Pricing (include all fees, registration costs, monthly rates, etc.)\n  • Any additional relevant information as long as it is for the current year\n\n- If NO activities are found after thorough searching:\n  \"Unfortunately, we don't currently offer any specific activities for [age group]. However, you might be interested in our programs for [suggest nearby age groups if found].\"\n\nFORMATTING:\n- Use clear headings for each activity\n- Use bullet points for details\n- Highlight pricing clearly\n- Do not group similar activities together\n\nREMEMBER:\n- NEVER make up activities or pricing\n- NEVER provide information for a different age group than the one asked for\n- NEVER include information for previous years\n- ALWAYS search before responding\n- Include ALL activities found, don't summarize or select\n- Be helpful and suggest alternatives if no exact match is found\n- Don't mention our database if you find or can't find information. Always talk about the club, not the database."
+        }
+      },
+      "id": "9a69dcb3-92e6-4baa-b636-d0ba8fe64c9e",
+      "name": "Conversational Agent",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.6,
+      "position": [
+        600,
+        -60
+      ]
+    },
+    {
+      "parameters": {
+        "name": "search_knowledge_base",
+        "description": "Search the knowledge base to respond to any query the user is asking, always related to the club and its activities, pricing, etc.",
+        "topK": 10
+      },
+      "id": "02c9a49e-bac2-461b-b21c-e85b8cf1f3f7",
+      "name": "Vector Store Tool",
+      "type": "@n8n/n8n-nodes-langchain.toolVectorStore",
+      "typeVersion": 1,
+      "position": [
+        800,
+        160
+      ]
+    },
+    {
+      "parameters": {
+        "model": "text-embedding-3-large",
+        "options": {}
+      },
+      "id": "4bc17eee-f27f-438e-ba90-53eb7917b4fb",
+      "name": "Embeddings OpenAI2",
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "typeVersion": 1,
+      "position": [
+        740,
+        580
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "e4XdpYn5J3lFOtCj",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "pineconeIndex": {
+          "__rl": true,
+          "value": "scrape",
+          "mode": "list",
+          "cachedResultName": "scrape"
+        },
+        "options": {
+          "pineconeNamespace": "test-web-scraper"
+        }
+      },
+      "id": "56a21b90-f818-46cb-ae52-351094ddf124",
+      "name": "Pinecone Vector Store2",
+      "type": "@n8n/n8n-nodes-langchain.vectorStorePinecone",
+      "typeVersion": 1,
+      "position": [
+        740,
+        400
+      ],
+      "credentials": {
+        "pineconeApi": {
+          "id": "rf3K1HcGKuqRdXUt",
+          "name": "PineconeApi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "### Customer Service Chat with Conversation Memory\n\nThis workflow uses:\n- Conversational Agent (instead of Q&A Chain) for memory support\n- Simple Memory node to store conversation history\n- Vector Store Tool for knowledge base searches\n- Session-based memory for multi-user support\n\nThe agent will automatically search the knowledge base and remember the conversation context.",
+        "height": 246,
+        "width": 521,
+        "color": 7
+      },
+      "id": "bdf152da-dfa9-476e-a861-8263c3205430",
+      "name": "Sticky Note2",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        280,
+        -340
+      ]
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $('Chat Trigger').item.json.sessionId }}",
+        "contextWindowLength": 10
+      },
+      "id": "423fddf2-970c-4775-a496-f60df39fe064",
+      "name": "Simple Memory",
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.2,
+      "position": [
+        680,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4o-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        520,
+        180
+      ],
+      "id": "784c31ce-cb5c-4d4d-9458-67d7fe2588e1",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "e4XdpYn5J3lFOtCj",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "chatgpt-4o-latest",
+          "mode": "list",
+          "cachedResultName": "chatgpt-4o-latest"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        1080,
+        360
+      ],
+      "id": "95d5d663-8dac-4345-bb71-992e80d18457",
+      "name": "OpenAI Chat Model1",
+      "credentials": {
+        "openAiApi": {
+          "id": "e4XdpYn5J3lFOtCj",
+          "name": "OpenAi account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Chat Trigger": {
+      "main": [
+        [
+          {
+            "node": "Conversational Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Vector Store Tool": {
+      "ai_tool": [
+        [
+          {
+            "node": "Conversational Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings OpenAI2": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Pinecone Vector Store2",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Pinecone Vector Store2": {
+      "ai_vectorStore": [
+        [
+          {
+            "node": "Vector Store Tool",
+            "type": "ai_vectorStore",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "Conversational Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Conversational Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Vector Store Tool",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "e8711136-e13b-4a96-9ebc-4890b2d5944f",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "524d99833c64dd159edc1cd61041d6c262bc68056e2c0787e901b1890060f87e"
+  },
+  "id": "KAkgnHvi48g4gnrZ",
+  "tags": []
+}
