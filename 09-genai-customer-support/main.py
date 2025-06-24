@@ -120,7 +120,7 @@ class SoccerClubSupportRAG:
                 matches = results.get("matches", [])
                 
                 # DEBUG: Let's see what we're getting
-                st.write(f"🔍 **DEBUG: Found {len(matches)} matches from Pinecone**")
+                # st.write(f"🔍 **DEBUG: Found {len(matches)} matches from Pinecone**")
                 
                 # Convert Pinecone results to LangChain documents
                 all_documents = []
@@ -135,15 +135,16 @@ class SoccerClubSupportRAG:
                     
                     # DEBUG: Show first 3 documents
                     
-                    st.write(f"**Debug Document {processed_count + 1}:**")
-                    st.write(f"- Metadata keys: {list(metadata.keys())}")
-                    st.write(f"- Content exists: {bool(text_content)}")
-                    st.write(f"- Content length: {len(text_content) if text_content else 0}")
+                    # st.write(f"**Debug Document {processed_count + 1}:**")
+                    # st.write(f"- Metadata keys: {list(metadata.keys())}")
+                    # st.write(f"- Content exists: {bool(text_content)}")
+                    # st.write(f"- Content length: {len(text_content) if text_content else 0}")
                     if text_content:
                         st.write(f"- Content preview: {str(text_content)[:150]}...")
 
                     st.write(f"**Raw text (first 500 chars):** {repr(text_content[:500])}")    
                     # Specifically check for pricing
+                    '''
                     if "280" in text_content:
                         st.success(f"✅ Found '280' in raw text")
                     elif "28" in text_content:
@@ -153,7 +154,7 @@ class SoccerClubSupportRAG:
                         st.success(f"✅ Found '350' in raw text")
                     elif "35" in text_content:
                         st.warning(f"⚠️ Found '35' but not '350' in raw text")
-
+                    '''
 
 
                     if text_content and len(text_content.strip()) > 20:
@@ -215,10 +216,10 @@ class SoccerClubSupportRAG:
                     processed_count += 1
                 
                 # DEBUG: Show summary
-                st.write(f"**📊 Processing Summary:**")
-                st.write(f"- Total matches: {len(matches)}")
-                st.write(f"- Documents with content: {len(all_documents)}")
-                st.write(f"- Empty/short content: {empty_content_count}")
+                # st.write(f"**📊 Processing Summary:**")
+                # st.write(f"- Total matches: {len(matches)}")
+                # st.write(f"- Documents with content: {len(all_documents)}")
+                # st.write(f"- Empty/short content: {empty_content_count}")
                 
                 if all_documents:
                     try:
@@ -411,6 +412,7 @@ def main():
                 if result["success"]:
                     st.success(result["message"])                    
 
+                    '''
                     if st.button("🔍 Test Stored Content"):
                         if st.session_state.rag_system.vector_store:
                             test_docs = st.session_state.rag_system.vector_store.similarity_search("280", k=3)
@@ -418,6 +420,7 @@ def main():
                             for i, doc in enumerate(test_docs):
                                 st.write(f"Doc {i+1}: {doc.page_content[:200]}...")
                     
+                    '''
                     # FORCE QA CHAIN CREATION:
                     try:
                         st.session_state.rag_system._create_qa_chain()
@@ -449,8 +452,8 @@ def main():
                     # Check if _create_qa_chain was called
                     try:
                         st.session_state.rag_system._create_qa_chain()
-                        st.write(f"- Manual QA chain creation: SUCCESS")
-                        st.write(f"- QA chain after manual creation: {st.session_state.rag_system.qa_chain is not None}")
+                        # st.write(f"- Manual QA chain creation: SUCCESS")
+                        s# t.write(f"- QA chain after manual creation: {st.session_state.rag_system.qa_chain is not None}")
                     except Exception as e:
                         st.error(f"- Manual QA chain creation failed: {e}")
                         
@@ -565,7 +568,7 @@ def main():
     
     # Footer
     st.markdown("---")
-    st.markdown("⚽ **Soccer Verdun AI Assistant** | 🗄️ **Powered by ChromaDB** | 📥 **Imported from Pinecone**")
+    st.markdown("⚽ **Soccer Verdun Customer Support Assistant** | 🗄️ **Powered by ChromaDB** | 📥 **Imported from Pinecone**")
 
 if __name__ == "__main__":
     main()
