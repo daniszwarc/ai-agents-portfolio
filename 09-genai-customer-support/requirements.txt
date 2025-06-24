@@ -31,3 +31,5 @@ requests>=2.31.0
 # Development Tools
 jupyter>=1.0.0
 pytest>=8.0.0
+pinecone>=7.0.0
+langchain-pinecone>=0.0.1
