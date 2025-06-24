@@ -31,7 +31,7 @@ The n8n workflow automates the entire customer support process:
 ### Step 1: Import Workflow
 1. Open your n8n instance
 2. Click **"Import from file"**
-3. Select `workflow.json`
+3. Select `Customer_Service_Agent.json`
 4. Click **"Import"**
 
 ### Step 2: Configure Credentials
