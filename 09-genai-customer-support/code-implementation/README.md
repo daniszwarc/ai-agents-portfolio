@@ -63,7 +63,6 @@ This customer support assistant demonstrates:
    streamlit run main.py
    ```
 
-6. **Open your browser** to `http://localhost:8501`
 
 ## How to Use
 
@@ -79,33 +78,7 @@ This customer support assistant demonstrates:
 - "How do I contact technical support?"
 - "What features are included in the platform?"
 
-## Architecture
 
-```
-┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
-│   Documents     │───▶│  Text Splitter  │───▶│   Embeddings    │
-│  (PDF, TXT)     │    │   (Chunking)    │    │   (OpenAI)      │
-└─────────────────┘    └─────────────────┘    └─────────────────┘
-                                                         │
-┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
-│ User Question   │───▶│  Vector Search  │◀───│  Vector Store   │
-│                 │    │   (Similarity)  │    │   (ChromaDB)    │
-└─────────────────┘    └─────────────────┘    └─────────────────┘
-         │                        │
-         │                        ▼
-         │              ┌─────────────────┐
-         └─────────────▶│   LLM (GPT)     │
-                        │   Generation    │
-                        └─────────────────┘
-                                 │
-                                 ▼
-                        ┌─────────────────┐
-                        │   Response +    │
-                        │   Sources       │
-                        └─────────────────┘
-```
-
-## Technical Implementation
 
 ### Core Components
 
